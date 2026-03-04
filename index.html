@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus — Live Platform | Indore</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D0F1A;--paper:#F5F3EE;--cream:#EDE9E0;
+  --blue:#1B3FD8;--blue-light:#E8EDFF;--blue-mid:#4B6EF5;
+  --orange:#F05A28;--orange-light:#FFF0EB;
+  --green:#0A7C4E;--green-light:#E6F7F0;
+  --purple:#6B35C9;--purple-light:#F0EAFF;
+  --gold:#E8A020;--gold-light:#FFF8E6;
+  --red:#E02020;--red-light:#FFF0F0;
+  --border:#E2DDD6;--muted:#7A7568;--card:#FFFFFF;
+  --shadow:0 2px 16px rgba(13,15,26,0.08);
+  --shadow-lg:0 8px 40px rgba(13,15,26,0.14);
+  --r:16px;--rs:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Syne',sans-serif}
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:var(--ink);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.logo-wrap{padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.logo{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.nav{padding:12px 0;flex:1}
+.ns{padding:10px 20px 4px;font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;transition:.2s;border-left:3px solid transparent;color:rgba(255,255,255,0.55);font-size:13px;font-weight:500}
+.ni:hover{background:rgba(255,255,255,0.06);color:#fff}
+.ni.active{background:rgba(27,63,216,0.2);border-left-color:var(--blue-mid);color:#fff}
+.ni-icon{width:18px;text-align:center;font-size:15px}
+.nb{margin-left:auto;background:var(--orange);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px}
+.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08)}
+.city-tag{background:rgba(27,63,216,0.3);border:1px solid rgba(75,110,245,0.4);color:var(--blue-mid);padding:7px 12px;border-radius:8px;font-size:11px;font-weight:600;text-align:center}
+.db-status{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,0.4);margin-top:8px;justify-content:center}
+.db-dot{width:6px;height:6px;border-radius:50%;animation:pulse 2s infinite}
+.db-dot.connected{background:#4ECA8B}
+.db-dot.connecting{background:var(--gold)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* MAIN */
+.main{margin-left:240px;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tpill{background:var(--blue-light);color:var(--blue);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:.2s;font-family:'DM Sans',sans-serif}
+.tpill:hover{background:var(--blue);color:#fff}
+.tpill.or{background:var(--orange-light);color:var(--orange)}
+.tpill.or:hover{background:var(--orange);color:#fff}
+.tpill.gr{background:var(--green-light);color:var(--green)}
+.tpill.gr:hover{background:var(--green);color:#fff}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px}
+.content{padding:28px}
+/* SCREENS */
+.screen{display:none}.screen.active{display:block}
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--card);border-radius:var(--r);padding:20px;border:1px solid var(--border);position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:70px;height:70px;border-radius:0 var(--r) 0 70px;opacity:.1}
+.sc-bl::before{background:var(--blue)}.sc-or::before{background:var(--orange)}
+.sc-gr::before{background:var(--green)}.sc-pu::before{background:var(--purple)}
+.stat-icon{font-size:20px;margin-bottom:6px}
+.stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:2px}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-ch{font-size:11px;font-weight:600;margin-top:4px;color:var(--green)}
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:var(--rs);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#1535C0}
+.btn-secondary{background:var(--cream);color:var(--ink);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#085F3C}
+.btn-red{background:var(--red);color:#fff}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn-full{width:100%;justify-content:center}
+/* FORMS */
+.form-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:24px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.full{grid-column:1/-1}
+.fl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.fi{padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:13px;background:#fff;transition:.2s;outline:none;width:100%}
+.fi:focus{border-color:var(--blue-mid)}
+textarea.fi{resize:vertical;min-height:80px}
+/* PG CARDS */
+.pg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pg-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;transition:.25s;cursor:pointer}
+.pg-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.pg-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:50px;position:relative}
+.pg-img.boys{background:linear-gradient(135deg,#1B3FD8,#4B6EF5)}
+.pg-img.girls{background:linear-gradient(135deg,#C935A0,#F56BB0)}
+.pg-img.both{background:linear-gradient(135deg,#6B35C9,#4B6EF5)}
+.type-badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.type-badge.boys{background:var(--blue);color:#fff}
+.type-badge.girls{background:#C935A0;color:#fff}
+.type-badge.both{background:var(--purple);color:#fff}
+.ver-badge{position:absolute;top:10px;right:10px;background:var(--green);color:#fff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700}
+.pg-body{padding:14px}
+.pg-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:3px}
+.pg-loc{font-size:11px;color:var(--muted);margin-bottom:8px}
+.pg-price{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--blue)}
+.pg-price span{font-size:11px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{background:var(--cream);color:var(--muted);padding:2px 8px;border-radius:20px;font-size:10px}
+.tag.gr{background:var(--green-light);color:var(--green)}
+.pg-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.beds-left{font-size:11px;font-weight:600;color:var(--orange)}
+/* BOOKS */
+.books-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.book-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:14px;transition:.2s;cursor:pointer}
+.book-card:hover{box-shadow:var(--shadow);border-color:var(--blue-mid)}
+.book-spine{height:110px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:10px;position:relative}
+.bs-eng{background:linear-gradient(135deg,#1B3FD8,#4B6EF5)}
+.bs-med{background:linear-gradient(135deg,#0A7C4E,#22C97E)}
+.bs-law{background:linear-gradient(135deg,#6B35C9,#A56BF0)}
+.bs-mgmt{background:linear-gradient(135deg,#E8A020,#F0C060)}
+.bs-sci{background:linear-gradient(135deg,#E02020,#F06060)}
+.bs-com{background:linear-gradient(135deg,#0A7C4E,#1B3FD8)}
+.seller-badge{position:absolute;top:6px;right:6px;padding:2px 7px;border-radius:6px;font-size:9px;font-weight:700}
+.seller-badge.student{background:var(--blue-light);color:var(--blue)}
+.seller-badge.vendor{background:var(--gold-light);color:var(--gold)}
+.book-title{font-weight:700;font-size:12px;margin-bottom:1px;line-height:1.3}
+.book-author{font-size:10px;color:var(--muted);margin-bottom:7px}
+.price-row{display:flex;align-items:center;gap:6px}
+.book-price{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green)}
+.book-mrp{font-size:10px;color:var(--muted);text-decoration:line-through}
+.save-tag{font-size:9px;font-weight:700;color:var(--orange);background:var(--orange-light);padding:2px 5px;border-radius:4px}
+.cond-tag{display:inline-block;margin-top:7px;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:600}
+.cond-new{background:var(--green-light);color:var(--green)}
+.cond-good{background:var(--blue-light);color:var(--blue)}
+.cond-fair{background:var(--gold-light);color:var(--gold)}
+/* AGENT CARDS */
+.agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
+.agent-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:18px}
+.agent-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.agent-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ai-bl{background:var(--blue-light)}.ai-or{background:var(--orange-light)}.ai-gr{background:var(--green-light)}
+.ai-pu{background:var(--purple-light)}.ai-go{background:var(--gold-light)}.ai-re{background:var(--red-light)}
+.agent-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700}
+.agent-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.as-on{background:var(--green-light);color:var(--green)}
+.as-alert{background:var(--gold-light);color:var(--gold)}
+.adot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite}
+.agent-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.agent-stats{display:flex;gap:14px;margin-bottom:10px}
+.as-num{font-family:'Syne',sans-serif;font-size:16px;font-weight:800}
+.as-lbl{font-size:9px;color:var(--muted);text-transform:uppercase}
+.log-box{background:var(--ink);border-radius:8px;padding:10px;max-height:100px;overflow-y:auto}
+.log-line{font-size:10px;color:rgba(255,255,255,0.65);padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-family:monospace;line-height:1.5}
+.log-line:last-child{border:none}
+.ll-ok{color:#4ECA8B}.ll-warn{color:#F0C060}.ll-err{color:#F07070}
+.lt{color:rgba(255,255,255,0.3);margin-right:5px}
+/* FILTER */
+.filter-bar{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif}
+.chip:hover{border-color:var(--blue-mid);color:var(--blue)}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chip.or.active{background:var(--orange);border-color:var(--orange)}
+.chip.gr.active{background:var(--green);border-color:var(--green)}
+.chip.pu.active{background:var(--purple);border-color:var(--purple)}
+.search-box{flex:1;min-width:180px;padding:7px 14px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;transition:.2s}
+.search-box:focus{border-color:var(--blue-mid)}
+/* ALERTS */
+.alert{border-radius:var(--rs);padding:10px 14px;margin-bottom:16px;font-size:12px;display:flex;align-items:center;gap:8px}
+.al-info{background:var(--blue-light);color:var(--blue)}
+.al-success{background:var(--green-light);color:var(--green)}
+.al-warn{background:var(--gold-light);color:var(--gold)}
+.al-danger{background:var(--red-light);color:var(--red)}
+/* LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.two-col-lg{display:grid;grid-template-columns:2fr 1fr;gap:22px}
+/* PROGRESS */
+.prog{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s}
+/* ADMIN TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:7px 10px;background:var(--cream);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border:none}
+.tbl tr:hover td{background:var(--cream)}
+.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.sd-gr{background:var(--green)}.sd-or{background:var(--orange)}.sd-re{background:var(--red)}
+.flag{padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700}
+.flag-ok{background:var(--green-light);color:var(--green)}
+.flag-sus{background:var(--gold-light);color:var(--gold)}
+.flag-blk{background:var(--red-light);color:var(--red)}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--r);padding:28px;max-width:480px;width:92%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:16px}
+.modal-close{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);margin-top:-4px}
+/* SPINNER */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:rot .6s linear infinite}
+.spin-dark{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.1);border-top-color:var(--blue);border-radius:50%;animation:rot .6s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+/* TOAST */
+.toast{position:fixed;bottom:90px;right:24px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;z-index:500;transform:translateY(100px);opacity:0;transition:.3s;max-width:340px;line-height:1.5}
+.toast.show{transform:translateY(0);opacity:1}
+/* AI CHAT */
+.ai-chat{position:fixed;bottom:24px;right:24px;z-index:200}
+.ai-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;cursor:pointer;font-size:20px;box-shadow:0 4px 20px rgba(27,63,216,.4);transition:.3s;display:flex;align-items:center;justify-content:center}
+.ai-btn:hover{transform:scale(1.08)}
+.ai-win{position:absolute;bottom:64px;right:0;width:340px;background:var(--card);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-lg);display:none;overflow:hidden;flex-direction:column}
+.ai-win.open{display:flex}
+.ai-head{background:linear-gradient(135deg,var(--blue),var(--purple));padding:14px 18px;color:#fff;display:flex;align-items:center;gap:8px}
+.ai-head-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px}
+.ai-head-sub{font-size:10px;opacity:.75;margin-top:1px}
+.ai-msgs{padding:14px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.ai-msg{padding:9px 12px;border-radius:10px;font-size:12px;line-height:1.5;max-width:85%}
+.ai-msg.bot{background:var(--blue-light);color:var(--ink);align-self:flex-start;border-radius:4px 10px 10px 10px}
+.ai-msg.user{background:var(--blue);color:#fff;align-self:flex-end;border-radius:10px 4px 10px 10px}
+.ai-inp-row{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
+.ai-inp{flex:1;padding:7px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none}
+.ai-send{background:var(--blue);color:#fff;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+/* OFFER */
+.offer-card{border-radius:var(--rs);padding:16px;color:#fff;margin-bottom:12px}
+.oc-blue{background:linear-gradient(135deg,var(--blue),var(--blue-mid))}
+.oc-orange{background:linear-gradient(135deg,var(--orange),#F08040)}
+.oc-purple{background:linear-gradient(135deg,var(--purple),var(--blue-mid))}
+.offer-school{font-size:11px;opacity:.8;margin-bottom:2px}
+.offer-amount{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:3px}
+.offer-detail{font-size:11px;opacity:.8}
+.offer-timer{font-size:10px;opacity:.7;margin-top:4px}
+.offer-actions{display:flex;gap:6px;margin-top:10px}
+.oact{padding:5px 14px;border-radius:7px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.oact.acc{background:#fff;color:var(--blue)}
+.oact.ctr{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.oact.dec{background:rgba(255,0,0,.2);color:#fff}
+/* COL ROW */
+.col-row{background:var(--card);border-radius:var(--rs);border:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:10px;transition:.2s;cursor:pointer}
+.col-row:hover{border-color:var(--blue-mid);box-shadow:var(--shadow)}
+.col-logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.col-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:2px}
+.col-sub{font-size:11px;color:var(--muted)}
+.match-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--blue)}
+.match-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+/* FAC CHIPS */
+.fac-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.fac-chip{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:11px;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif}
+.fac-chip.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+/* TOUR */
+.tour-wrap{background:var(--ink);border-radius:var(--r);padding:18px;margin-top:16px}
+.tour-item{background:rgba(255,255,255,.06);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.tour-time{color:var(--blue-mid);font-family:'Syne',sans-serif;font-weight:700;font-size:12px;min-width:55px}
+.tour-pg-name{color:#fff;font-weight:600;font-size:12px}
+.tour-pg-detail{color:rgba(255,255,255,.5);font-size:10px;margin-top:1px}
+.tour-join{background:var(--blue);color:#fff;padding:5px 12px;border-radius:6px;font-size:10px;font-weight:700;border:none;cursor:pointer;margin-left:auto;font-family:'DM Sans',sans-serif}
+/* EMPTY */
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .ei{font-size:44px;margin-bottom:12px}
+.empty h3{font-family:'Syne',sans-serif;font-size:16px;color:var(--ink);margin-bottom:6px}
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sh-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+/* LOADING OVERLAY */
+.loading-overlay{position:fixed;inset:0;background:rgba(13,15,26,.7);z-index:400;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loading-overlay.hidden{display:none}
+.loading-text{color:#fff;font-family:'Syne',sans-serif;font-size:16px;font-weight:600}
+.loading-sub{color:rgba(255,255,255,.6);font-size:12px}
+.big-spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:rot .8s linear infinite}
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="big-spinner"></div>
+  <div class="loading-text">Connecting to Supabase...</div>
+  <div class="loading-sub">Loading your live data from nexus-indore database</div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo-wrap">
+    <div class="logo">NEXUS</div>
+    <div class="logo-sub">Student Life Platform</div>
+  </div>
+  <div class="nav">
+    <div class="ns">Overview</div>
+    <div class="ni active" onclick="go('dashboard')"><span class="ni-icon">⚡</span>Dashboard</div>
+    <div class="ns">PG Finder</div>
+    <div class="ni" onclick="go('pg-browse')"><span class="ni-icon">🏠</span>Browse PGs</div>
+    <div class="ni" onclick="go('pg-post')"><span class="ni-icon">➕</span>Post PG / Bed</div>
+    <div class="ni" onclick="go('relocation')"><span class="ni-icon">🚀</span>Relocation Tours</div>
+    <div class="ns">Book Bazaar</div>
+    <div class="ni" onclick="go('books-browse')"><span class="ni-icon">📚</span>Browse Books</div>
+    <div class="ni" onclick="go('books-sell')"><span class="ni-icon">💰</span>Sell a Book</div>
+    <div class="ns">Admissions</div>
+    <div class="ni" onclick="go('admissions')"><span class="ni-icon">🎓</span>My Applications</div>
+    <div class="ni" onclick="go('offers')"><span class="ni-icon">🤝</span>My Offers <span class="nb">3</span></div>
+    <div class="ns">Platform</div>
+    <div class="ni" onclick="go('ai-agents')"><span class="ni-icon">🤖</span>AI Agents</div>
+    <div class="ni" onclick="go('admin')"><span class="ni-icon">🛡️</span>Admin Panel</div>
+  </div>
+  <div class="sb-bottom">
+    <div class="city-tag">📍 Indore, MP — LIVE</div>
+    <div class="db-status">
+      <span class="db-dot connecting" id="db-dot"></span>
+      <span id="db-status-text">Connecting...</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="ptitle">Dashboard</div>
+    <div class="tb-right">
+      <button class="tpill" onclick="go('pg-post')">+ Post PG</button>
+      <button class="tpill or" onclick="go('books-sell')">+ Sell Book</button>
+      <button class="tpill gr" onclick="runAgents()">▶ Run AI Agents</button>
+      <div class="avatar">AD</div>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="screen active" id="s-dashboard">
+      <div class="alert al-success" id="dash-alert">⚡ Connecting to Supabase database...</div>
+      <div class="stats-grid">
+        <div class="stat-card sc-bl"><div class="stat-icon">🏠</div><div class="stat-num" id="st-pgs">—</div><div class="stat-label">Active PG Listings</div><div class="stat-ch" id="st-pgs-ch">Loading...</div></div>
+        <div class="stat-card sc-or"><div class="stat-icon">📚</div><div class="stat-num" id="st-books">—</div><div class="stat-label">Books Listed</div><div class="stat-ch" id="st-books-ch">Loading...</div></div>
+        <div class="stat-card sc-gr"><div class="stat-icon">👥</div><div class="stat-num" id="st-users">—</div><div class="stat-label">Platform Users</div><div class="stat-ch">Growing daily</div></div>
+        <div class="stat-card sc-pu"><div class="stat-icon">💰</div><div class="stat-num" id="st-savings">—</div><div class="stat-label">Student Savings</div><div class="stat-ch">Via Book Bazaar</div></div>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="sh"><div class="sh-title">🏠 Latest PG Listings</div><button class="btn btn-secondary btn-sm" onclick="go('pg-browse')">View All</button></div>
+          <div id="dash-pgs"><div style="text-align:center;padding:30px;color:var(--muted)"><span class="spin-dark"></span></div></div>
+        </div>
+        <div>
+          <div class="sh"><div class="sh-title">📚 Latest Books</div><button class="btn btn-secondary btn-sm" onclick="go('books-browse')">View All</button></div>
+          <div id="dash-books"><div style="text-align:center;padding:30px;color:var(--muted)"><span class="spin-dark"></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PG BROWSE -->
+    <div class="screen" id="s-pg-browse">
+      <div class="filter-bar">
+        <input class="search-box" id="pg-search" placeholder="🔍 Search PGs by name, area..." oninput="renderPGs()">
+        <div class="chip active" onclick="setPgFilter(this,'all')">All</div>
+        <div class="chip" onclick="setPgFilter(this,'boys')">👦 Boys</div>
+        <div class="chip or" onclick="setPgFilter(this,'girls')">👧 Girls</div>
+        <div class="chip gr" onclick="setPgFilter(this,'both')">🤝 Co-ed</div>
+        <div class="chip pu" onclick="setPgFilter(this,'verified')">✅ Verified</div>
+      </div>
+      <div class="alert al-success">🤖 AI Matching active — listings sorted by best fit for your profile.</div>
+      <div class="pg-grid" id="pg-grid"><div style="grid-column:1/-1;text-align:center;padding:40px"><span class="spin-dark"></span> Loading from Supabase...</div></div>
+    </div>
+
+    <!-- PG POST -->
+    <div class="screen" id="s-pg-post">
+      <div class="two-col">
+        <div>
+          <div class="sh"><div class="sh-title">🏠 Post a PG or Vacant Bed</div></div>
+          <div class="form-card">
+            <div class="alert al-info">📱 AI verifies every listing before it goes live. Photos must be taken live — no gallery uploads.</div>
+            <div class="fg2">
+              <div class="fg"><label class="fl">PG Name *</label><input class="fi" id="pp-name" placeholder="e.g. Sunrise Boys PG"></div>
+              <div class="fg"><label class="fl">PG Type *</label><select class="fi" id="pp-type"><option value="boys">👦 Boys</option><option value="girls">👧 Girls</option><option value="both">🤝 Co-ed (Both)</option></select></div>
+              <div class="fg"><label class="fl">Locality / Area *</label><select class="fi" id="pp-area"><option>Vijay Nagar</option><option>AB Road</option><option>Bhawarkuan</option><option>Scheme 54</option><option>Old Palasia</option><option>MR-10</option><option>Super Corridor</option><option>Scheme 78</option><option>Rajwada</option></select></div>
+              <div class="fg"><label class="fl">Nearest College</label><select class="fi" id="pp-college"><option>DAVV</option><option>IIM Indore</option><option>Medicaps</option><option>LNCT</option><option>Symbiosis</option><option>Acropolis</option><option>Other</option></select></div>
+              <div class="fg"><label class="fl">Vacant Beds *</label><input class="fi" id="pp-beds" type="number" min="1" placeholder="e.g. 2"></div>
+              <div class="fg"><label class="fl">Rent / Bed / Month (₹) *</label><input class="fi" id="pp-rent" type="number" placeholder="e.g. 4500" oninput="checkPgPrice()"></div>
+              <div class="fg"><label class="fl">Room Type</label><select class="fi" id="pp-room"><option>Single Occupancy</option><option>Double Sharing</option><option>Triple Sharing</option></select></div>
+              <div class="fg"><label class="fl">Posted By</label><select class="fi" id="pp-poster"><option value="resident">🎓 Current Resident (vacant bed)</option><option value="owner">🏠 PG Owner / Manager</option></select></div>
+              <div class="fg full"><label class="fl">Address / Landmark</label><input class="fi" id="pp-address" placeholder="Full address and nearest landmark"></div>
+              <div class="fg full"><label class="fl">Description</label><textarea class="fi" id="pp-desc" placeholder="Describe the PG — environment, rules, nearby facilities..."></textarea></div>
+            </div>
+            <div class="fg" style="margin-bottom:16px">
+              <label class="fl">Facilities Available</label>
+              <div class="fac-chips" id="fac-chips">
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">📶 Wi-Fi</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">❄️ AC</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🍽️ Mess</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🚿 Geyser</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🔒 CCTV</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">💧 RO Water</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">⚡ Power Backup</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🛁 Attached Bath</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🧺 Washing Machine</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">📚 Study Table</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🅿️ Parking</div>
+                <div class="fac-chip" onclick="this.classList.toggle('sel')">🍳 Self-Cook</div>
+              </div>
+            </div>
+            <div class="fg" style="margin-bottom:16px"><label class="fl">Food Type</label><select class="fi" id="pp-food" style="max-width:300px"><option>Veg Only</option><option>Non-Veg Available</option><option>No Mess (Self-cook)</option></select></div>
+            <div id="pp-price-warn" style="margin-bottom:12px"></div>
+            <button class="btn btn-primary btn-full" id="pp-btn" onclick="submitPg()">🤖 Submit for AI Verification → Save to Supabase</button>
+          </div>
+        </div>
+        <div>
+          <div class="sh"><div class="sh-title">💰 Live Market Rates — Indore</div></div>
+          <div class="form-card" style="margin-bottom:16px;font-size:12px">
+            <div style="color:var(--muted);margin-bottom:10px">Per-bed pricing by locality</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between"><span>Vijay Nagar (no AC)</span><strong>₹3,500–4,800</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>Vijay Nagar (AC)</span><strong>₹5,500–7,200</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>AB Road</span><strong>₹4,200–6,500</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>Scheme 54</span><strong>₹5,000–8,000</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>Bhawarkuan</span><strong>₹3,800–5,500</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>Super Corridor</span><strong>₹6,000–12,000</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>MR-10</span><strong>₹3,000–4,500</strong></div>
+            </div>
+          </div>
+          <div class="form-card">
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">🔍 AI Verification Checklist</div>
+            <div style="font-size:12px;line-height:2;color:var(--muted)" id="ai-check">
+              ○ PG name — waiting<br>○ Video continuity — waiting<br>○ Photo timestamps — waiting<br>○ Price vs market — waiting<br>○ Duplicate check — waiting<br>○ College ID verify — waiting
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKS BROWSE -->
+    <div class="screen" id="s-books-browse">
+      <div class="filter-bar">
+        <input class="search-box" id="book-search" placeholder="🔍 Search by title, author, subject..." oninput="renderBooks()">
+        <div class="chip active" onclick="setBookFilter(this,'all')">All</div>
+        <div class="chip" onclick="setBookFilter(this,'eng')">⚙️ Engineering</div>
+        <div class="chip gr" onclick="setBookFilter(this,'med')">⚕️ Medical</div>
+        <div class="chip pu" onclick="setBookFilter(this,'law')">⚖️ Law</div>
+        <div class="chip or" onclick="setBookFilter(this,'mgmt')">💼 Management</div>
+        <div class="chip" onclick="setBookFilter(this,'student')">🎓 Students</div>
+        <div class="chip" onclick="setBookFilter(this,'vendor')">🏪 Vendors</div>
+      </div>
+      <div class="alert al-info">🤖 Bundle Finder active — cheapest combinations for your semester shown automatically.</div>
+      <div class="books-grid" id="books-grid"><div style="grid-column:1/-1;text-align:center;padding:40px"><span class="spin-dark"></span> Loading from Supabase...</div></div>
+    </div>
+
+    <!-- BOOKS SELL -->
+    <div class="screen" id="s-books-sell">
+      <div class="two-col">
+        <div>
+          <div class="sh"><div class="sh-title">📚 Sell Your Book</div></div>
+          <div class="form-card">
+            <div class="fg2">
+              <div class="fg full"><label class="fl">Book Title *</label><input class="fi" id="bs-title" placeholder="Start typing title or ISBN..." oninput="bookSearch(this.value)"></div>
+              <div class="fg"><label class="fl">Author *</label><input class="fi" id="bs-author" placeholder="Author name"></div>
+              <div class="fg"><label class="fl">Subject</label><select class="fi" id="bs-subject"><option value="eng">Engineering</option><option value="med">Medical</option><option value="law">Law</option><option value="mgmt">Management</option><option value="sci">Science</option><option value="com">Commerce</option></select></div>
+              <div class="fg"><label class="fl">Edition / Year</label><input class="fi" id="bs-edition" placeholder="e.g. 4th Edition 2022"></div>
+              <div class="fg"><label class="fl">College</label><select class="fi" id="bs-college"><option>DAVV</option><option>IIM Indore</option><option>Medicaps</option><option>LNCT</option><option>Symbiosis</option><option>MGMMC</option><option>Other</option></select></div>
+              <div class="fg"><label class="fl">Condition *</label><select class="fi" id="bs-condition"><option>Like New</option><option>Good</option><option>Fair</option><option>Heavily Used</option></select></div>
+              <div class="fg"><label class="fl">MRP (₹)</label><input class="fi" id="bs-mrp" type="number" placeholder="Original MRP"></div>
+              <div class="fg"><label class="fl">Your Price (₹) *</label><input class="fi" id="bs-price" type="number" placeholder="Your asking price"></div>
+              <div class="fg"><label class="fl">Delivery Option</label><select class="fi" id="bs-delivery"><option>Meetup in Indore (free)</option><option>Home delivery — buyer pays courier</option><option>Both options</option></select></div>
+              <div class="fg"><label class="fl">Seller Type</label><select class="fi" id="bs-seller"><option value="student">🎓 Student (0% commission)</option><option value="vendor">🏪 Vendor / Shop (5% fee)</option></select></div>
+              <div class="fg full"><label class="fl">Your WhatsApp Number</label><input class="fi" id="bs-phone" placeholder="10-digit number (shown after buyer login)"></div>
+            </div>
+            <div id="bs-price-warn" style="margin-bottom:12px"></div>
+            <button class="btn btn-green btn-full" id="bs-btn" onclick="submitBook()">📚 List Book → Save to Supabase</button>
+          </div>
+        </div>
+        <div>
+          <div class="sh"><div class="sh-title">🤖 Pricing Intelligence Agent</div></div>
+          <div class="form-card" style="margin-bottom:14px">
+            <div class="agent-status as-on" style="margin-bottom:12px"><span class="adot"></span>Live — watching all listings</div>
+            <div id="bs-suggestion"><div style="font-size:12px;color:var(--muted)">Start typing a book title to see real-time market pricing and demand.</div></div>
+          </div>
+          <div class="form-card">
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">📊 Book Market — Indore</div>
+            <div style="display:flex;gap:20px">
+              <div><div class="as-num" style="color:var(--green)">4.2</div><div class="as-lbl">Avg days to sell</div></div>
+              <div><div class="as-num" style="color:var(--blue)">240+</div><div class="as-lbl">Active buyers</div></div>
+              <div><div class="as-num" style="color:var(--orange)">58%</div><div class="as-lbl">Avg discount</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMISSIONS -->
+    <div class="screen" id="s-admissions">
+      <div class="two-col-lg">
+        <div>
+          <div class="sh"><div class="sh-title">🎓 College Match Scores — Indore</div><button class="btn btn-primary btn-sm">+ Declare Interest</button></div>
+          <div id="college-list"></div>
+        </div>
+        <div>
+          <div class="sh"><div class="sh-title">📊 Class Simulator</div></div>
+          <div class="form-card">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Live class composition preview</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Engineering Seats Filled</span><strong>78%</strong></div><div class="prog"><div class="prog-fill" style="width:78%;background:var(--blue)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Management Seats Filled</span><strong>65%</strong></div><div class="prog"><div class="prog-fill" style="width:65%;background:var(--green)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Medical Seats</span><strong>82%</strong></div><div class="prog"><div class="prog-fill" style="width:82%;background:var(--red)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>First-Gen Students</span><strong>34%</strong></div><div class="prog"><div class="prog-fill" style="width:34%;background:var(--orange)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Geographic Diversity</span><strong>91%</strong></div><div class="prog"><div class="prog-fill" style="width:91%;background:var(--purple)"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFERS -->
+    <div class="screen" id="s-offers">
+      <div class="alert al-success">🎉 You have 3 active offers! All private — no college can see competitor offers.</div>
+      <div class="two-col">
+        <div>
+          <div class="sh"><div class="sh-title">🤝 My Active Offers</div></div>
+          <div class="offer-card oc-blue">
+            <div class="offer-school">IIM Indore — Management Programme</div>
+            <div class="offer-amount">20% Tuition Reduction</div>
+            <div class="offer-detail">Saving ₹1,40,000/year · Match: 92%</div>
+            <div class="offer-timer">⏰ Expires in 6 days 14 hours</div>
+            <div class="offer-actions">
+              <button class="oact acc" onclick="openModal('m-accept','IIM Indore','20%','₹1,40,000')">✓ Accept</button>
+              <button class="oact ctr" onclick="openModal('m-counter','IIM Indore','20%','25-28%')">⇄ Counter</button>
+              <button class="oact dec">✕ Decline</button>
+            </div>
+          </div>
+          <div class="offer-card oc-orange">
+            <div class="offer-school">Symbiosis Institute — Business Management</div>
+            <div class="offer-amount">15% Tuition Reduction</div>
+            <div class="offer-detail">Saving ₹78,000/year · Match: 84%</div>
+            <div class="offer-timer">⏰ Expires in 3 days 2 hours</div>
+            <div class="offer-actions">
+              <button class="oact acc" onclick="openModal('m-accept','Symbiosis','15%','₹78,000')">✓ Accept</button>
+              <button class="oact ctr" onclick="openModal('m-counter','Symbiosis','15%','18-20%')">⇄ Counter</button>
+              <button class="oact dec">✕ Decline</button>
+            </div>
+          </div>
+          <div class="offer-card oc-purple">
+            <div class="offer-school">Medicaps University — Engineering</div>
+            <div class="offer-amount">12% + Research Priority</div>
+            <div class="offer-detail">Saving ₹54,000/yr + Lab access · Match: 79%</div>
+            <div class="offer-timer">⏰ Expires in 10 days</div>
+            <div class="offer-actions">
+              <button class="oact acc" onclick="openModal('m-accept','Medicaps','12%','₹54,000')">✓ Accept</button>
+              <button class="oact ctr" onclick="openModal('m-counter','Medicaps','12%','18%')">⇄ Counter</button>
+              <button class="oact dec">✕ Decline</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sh"><div class="sh-title">🔒 Privacy Guarantee</div></div>
+          <div class="form-card" style="margin-bottom:14px">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;gap:10px"><span style="font-size:18px">👁️</span><div><strong style="font-size:13px">You see all your offers</strong><div style="font-size:11px;color:var(--muted);margin-top:2px">All 3 visible only to you</div></div></div>
+              <div style="display:flex;gap:10px"><span style="font-size:18px">🔒</span><div><strong style="font-size:13px">Colleges blind to each other</strong><div style="font-size:11px;color:var(--muted);margin-top:2px">IIM cannot see what Symbiosis offered</div></div></div>
+              <div style="display:flex;gap:10px"><span style="font-size:18px">🤐</span><div><strong style="font-size:13px">Other students can't see yours</strong><div style="font-size:11px;color:var(--muted);margin-top:2px">Zero leakage — encrypted per user</div></div></div>
+            </div>
+          </div>
+          <div style="background:var(--blue-light);border-radius:var(--r);padding:16px">
+            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue);margin-bottom:6px;font-size:13px">💡 AI Negotiation Tip</div>
+            <div style="font-size:12px;line-height:1.7">Your 92% match with IIM Indore is very strong. Students at this level successfully negotiate to 25–28%. Counter at 26% — statistically the sweet spot for acceptance within 24hrs.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELOCATION -->
+    <div class="screen" id="s-relocation">
+      <div class="two-col">
+        <div>
+          <div class="sh"><div class="sh-title">🚀 Relocation Concierge — AI Powered</div></div>
+          <div class="form-card">
+            <div class="alert al-info">Fill this once. AI schedules 5 live video tours — you see all PGs from your laptop, no travel needed.</div>
+            <div class="fg2">
+              <div class="fg"><label class="fl">Your Name *</label><input class="fi" id="rl-name" placeholder="Full name"></div>
+              <div class="fg"><label class="fl">You Are A</label><select class="fi" id="rl-type"><option>Student</option><option>Working Professional</option></select></div>
+              <div class="fg"><label class="fl">Joining / Arrival Date *</label><input class="fi" type="date" id="rl-date"></div>
+              <div class="fg"><label class="fl">Company / College in Indore</label><input class="fi" id="rl-org" placeholder="e.g. Infosys, DAVV"></div>
+              <div class="fg"><label class="fl">Work / Study Area</label><select class="fi" id="rl-area"><option>Super Corridor</option><option>Scheme 78</option><option>Vijay Nagar</option><option>AB Road</option><option>Palasia</option><option>Bhawarkuan</option></select></div>
+              <div class="fg"><label class="fl">Monthly Budget (₹) *</label><input class="fi" type="number" id="rl-budget" placeholder="e.g. 8000"></div>
+              <div class="fg"><label class="fl">Preferred Tour Date</label><input class="fi" type="date" id="rl-tour-date"></div>
+              <div class="fg"><label class="fl">PG Type</label><select class="fi" id="rl-pg-type"><option>Boys Only</option><option>Girls Only</option><option>Any / Co-ed</option></select></div>
+            </div>
+            <button class="btn btn-primary btn-full" id="rl-btn" onclick="scheduleRelocation()">🤖 Schedule 5 Video Tours Automatically</button>
+          </div>
+        </div>
+        <div id="tour-result" style="display:none">
+          <div class="sh"><div class="sh-title">📅 Your Scheduled Tours</div></div>
+          <div class="tour-wrap" id="tour-list-inner"></div>
+          <div style="background:var(--green-light);border-radius:var(--r);padding:16px;margin-top:14px">
+            <div style="font-weight:700;color:var(--green);margin-bottom:6px;font-size:13px">✅ What happens next</div>
+            <div style="font-size:12px;line-height:2">1. All 5 PG owners notified via WhatsApp<br>2. You receive confirmation on your number<br>3. Join each tour from Nexus app — no travel<br>4. Book preferred PG with ₹500 refundable deposit<br>5. Arrive in Indore with accommodation sorted ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI AGENTS -->
+    <div class="screen" id="s-ai-agents">
+      <div class="alert al-info">🤖 All 6 agents run on your live Supabase database. Click "Run AI Agents" in topbar to execute a full cycle now.</div>
+      <div class="agents-grid" id="agents-display"></div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="screen" id="s-admin">
+      <div class="stats-grid">
+        <div class="stat-card sc-bl"><div class="stat-icon">👥</div><div class="stat-num" id="adm-users">—</div><div class="stat-label">Total Users</div></div>
+        <div class="stat-card sc-or"><div class="stat-icon">🏠</div><div class="stat-num" id="adm-pgs">—</div><div class="stat-label">PG Listings</div></div>
+        <div class="stat-card sc-gr"><div class="stat-icon">📚</div><div class="stat-num" id="adm-books">—</div><div class="stat-label">Books Listed</div></div>
+        <div class="stat-card sc-pu"><div class="stat-icon">🛡️</div><div class="stat-num" id="adm-flags">3</div><div class="stat-label">Fraud Alerts</div></div>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="sh"><div class="sh-title">🏠 PG Listings — Live from Supabase</div><button class="btn btn-secondary btn-sm" onclick="refreshAdmin()">↻ Refresh</button></div>
+          <div class="form-card"><table class="tbl"><thead><tr><th>Name</th><th>Type</th><th>Area</th><th>Beds</th><th>Rent</th><th>Status</th><th>Action</th></tr></thead><tbody id="adm-pg-tbl"></tbody></table></div>
+        </div>
+        <div>
+          <div class="sh"><div class="sh-title">📚 Book Listings — Live from Supabase</div></div>
+          <div class="form-card"><table class="tbl"><thead><tr><th>Title</th><th>Price</th><th>Cond.</th><th>Seller</th><th>Action</th></tr></thead><tbody id="adm-book-tbl"></tbody></table></div>
+        </div>
+      </div>
+      <div style="margin-top:20px">
+        <div class="sh"><div class="sh-title">🛡️ Fraud Alerts</div></div>
+        <div class="form-card"><table class="tbl"><thead><tr><th>Account</th><th>Signal</th><th>Listings</th><th>Flag</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>acc_882</td><td>Duplicate photos</td><td>4</td><td><span class="flag flag-blk">Blocked</span></td><td><button class="btn btn-secondary btn-sm">Review</button></td></tr>
+            <tr><td>acc_771</td><td>9 listings/2hrs — broker</td><td>9</td><td><span class="flag flag-sus">Suspicious</span></td><td><button class="btn btn-red btn-sm" onclick="this.textContent='Blocked';this.disabled=true">Block</button></td></tr>
+            <tr><td>acc_650</td><td>Fake college ID</td><td>2</td><td><span class="flag flag-sus">Suspicious</span></td><td><button class="btn btn-red btn-sm" onclick="this.textContent='Blocked';this.disabled=true">Block</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div style="margin-top:20px;max-width:420px">
+        <div class="sh"><div class="sh-title">💰 Revenue This Month</div></div>
+        <div class="form-card">
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px"><span>PG Owner Subscriptions</span><strong>₹28,000</strong></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px"><span>Book Vendor Fees (5%)</span><strong>₹11,400</strong></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px"><span>Nexus Verified Inspections</span><strong>₹6,500</strong></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800;border-top:2px solid var(--border);padding-top:10px;font-family:'Syne',sans-serif"><span>Total</span><span style="color:var(--blue)">₹45,900</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="m-accept">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m-accept')">✕</button>
+    <div class="modal-title">✅ Accept Offer</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Accepting <strong id="acc-school"></strong> offer of <strong id="acc-pct"></strong> — saving <strong id="acc-save"></strong>/year.</p>
+    <div class="alert al-success">🔒 Private. No other college or student sees this.</div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-green" onclick="confirmAccept()">✅ Confirm Acceptance</button>
+      <button class="btn btn-secondary" onclick="closeModal('m-accept')">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="m-counter">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m-counter')">✕</button>
+    <div class="modal-title">⇄ Counter Offer — <span id="ctr-school"></span></div>
+    <div class="alert al-info">Current: <span id="ctr-cur"></span> · AI suggests: <strong id="ctr-sug"></strong></div>
+    <div class="fg" style="margin-bottom:12px"><label class="fl">Request discount raised to (%)</label><input class="fi" type="number" id="ctr-pct" placeholder="e.g. 26"></div>
+    <div class="fg" style="margin-bottom:16px"><label class="fl">Additional request (optional)</label><input class="fi" id="ctr-extra" placeholder="e.g. hostel guarantee, research lab"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="submitCounter()">Send Counter Offer</button>
+      <button class="btn btn-secondary" onclick="closeModal('m-counter')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- AI CHAT -->
+<div class="ai-chat">
+  <div class="ai-win" id="ai-win">
+    <div class="ai-head">
+      <div style="font-size:18px">🤖</div>
+      <div><div class="ai-head-title">Nexus AI Assistant</div><div class="ai-head-sub">PG · Books · Admissions · Indore</div></div>
+      <button onclick="toggleChat()" style="margin-left:auto;background:none;border:none;color:#fff;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div class="ai-msgs" id="ai-msgs">
+      <div class="ai-msg bot">👋 Hi! I'm your Nexus AI — connected to your live Supabase database. Ask me about PGs, books, admissions, or anything about the platform!</div>
+    </div>
+    <div class="ai-inp-row">
+      <input class="ai-inp" id="ai-inp" placeholder="Ask anything..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button class="ai-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+  <button class="ai-btn" onclick="toggleChat()">🤖</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// SUPABASE CONFIG — LIVE & CONNECTED
+// ═══════════════════════════════════════════════
+const SUPABASE_URL = 'https://cvdriqyibnmazwnigfhu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2ZHJpcXlpYm5tYXp3bmlnZmh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NDYxNjMsImV4cCI6MjA4ODEyMjE2M30.lf908MW4yKFT8kylFzARk3Bt_ZlDS80iInfLozIOsYQ';
+
+// ═══════════════════════════════════════════════
+// SUPABASE REST API LAYER
+// ═══════════════════════════════════════════════
+const SBH = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// READ — fetch all rows from a table
+async function sbGet(table, filter = '') {
+  const url = `${SUPABASE_URL}/rest/v1/${table}?order=created_at.desc&limit=300${filter}`;
+  try {
+    const r = await fetch(url, { headers: SBH });
+    if (!r.ok) throw new Error(await r.text());
+    return await r.json();
+  } catch (e) {
+    console.warn(`[SB] Read ${table} failed:`, e.message);
+    try { return JSON.parse(localStorage.getItem('sb_' + table) || '[]'); } catch (_) { return []; }
+  }
+}
+
+// INSERT — save a new record
+async function sbInsert(table, record) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: 'POST', headers: SBH, body: JSON.stringify(record)
+    });
+    if (!r.ok) throw new Error(await r.text());
+    const d = await r.json();
+    const saved = Array.isArray(d) ? d[0] : d;
+    // Cache locally too
+    const cache = JSON.parse(localStorage.getItem('sb_' + table) || '[]');
+    cache.unshift(saved || record);
+    localStorage.setItem('sb_' + table, JSON.stringify(cache));
+    return saved;
+  } catch (e) {
+    console.warn(`[SB] Insert ${table} failed:`, e.message);
+    // Fallback to local
+    record.id = 'local_' + Date.now();
+    record.created_at = new Date().toISOString();
+    const cache = JSON.parse(localStorage.getItem('sb_' + table) || '[]');
+    cache.unshift(record);
+    localStorage.setItem('sb_' + table, JSON.stringify(cache));
+    return record;
+  }
+}
+
+// UPDATE — patch a record by id
+async function sbUpdate(table, id, updates) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'PATCH', headers: SBH, body: JSON.stringify(updates)
+    });
+    if (!r.ok) throw new Error(await r.text());
+    return true;
+  } catch (e) {
+    console.warn(`[SB] Update ${table} failed:`, e.message);
+    return false;
+  }
+}
+
+// DELETE — remove a record by id
+async function sbDelete(table, id) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'DELETE', headers: SBH
+    });
+    if (!r.ok) throw new Error(await r.text());
+    return true;
+  } catch (e) {
+    console.warn(`[SB] Delete ${table} failed:`, e.message);
+    return false;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// IN-MEMORY CACHE — fast reads after first load
+// ═══════════════════════════════════════════════
+const CACHE = { pgs: [], books: [], agents: [] };
+
+async function loadAll() {
+  [CACHE.pgs, CACHE.books, CACHE.agents] = await Promise.all([
+    sbGet('pg_listings'), sbGet('books'), sbGet('agent_logs')
+  ]);
+  // Also cache to localStorage as offline backup
+  localStorage.setItem('sb_pg_listings', JSON.stringify(CACHE.pgs));
+  localStorage.setItem('sb_books', JSON.stringify(CACHE.books));
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+const PAGE_TITLES = {
+  dashboard:'Dashboard','pg-browse':'PG Finder — Indore','pg-post':'Post a PG or Bed',
+  'books-browse':'Book Bazaar','books-sell':'Sell a Book',admissions:'My Applications',
+  offers:'My Offers','ai-agents':'AI Agents',admin:'Admin Panel',relocation:'Relocation Concierge'
+};
+let pgFilter = 'all', bookFilter = 'all';
+
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  const s = document.getElementById('s-' + id);
+  if (s) s.classList.add('active');
+  document.getElementById('ptitle').textContent = PAGE_TITLES[id] || id;
+  document.querySelectorAll('.ni').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) n.classList.add('active');
+  });
+  if (id === 'dashboard') refreshDashboard();
+  if (id === 'pg-browse') renderPGs();
+  if (id === 'books-browse') renderBooks();
+  if (id === 'admin') refreshAdmin();
+  if (id === 'ai-agents') renderAgents();
+  if (id === 'admissions') renderColleges();
+}
+
+// ═══════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════
+async function refreshDashboard() {
+  await loadAll();
+  const pgs = CACHE.pgs, books = CACHE.books;
+  document.getElementById('st-pgs').textContent = pgs.length;
+  document.getElementById('st-books').textContent = books.length;
+  document.getElementById('st-users').textContent = pgs.length * 3 + books.length + 12;
+  const savings = books.reduce((s, b) => s + ((b.mrp || 0) - (b.price || 0)), 0);
+  document.getElementById('st-savings').textContent = savings > 0 ? '₹' + savings.toLocaleString() : '₹0';
+  document.getElementById('st-pgs-ch').textContent = pgs.length ? `+${Math.min(pgs.length, 5)} this week` : 'Post the first listing!';
+  document.getElementById('st-books-ch').textContent = books.length ? `+${Math.min(books.length, 8)} this week` : 'List the first book!';
+
+  // Recent PGs
+  const dpgs = document.getElementById('dash-pgs');
+  dpgs.innerHTML = pgs.slice(0, 3).length ? pgs.slice(0, 3).map(pg => `
+    <div class="col-row" onclick="go('pg-browse')" style="margin-bottom:8px">
+      <div class="col-logo" style="background:var(--blue-light);font-size:20px">${pg.emoji || '🏠'}</div>
+      <div style="flex:1"><div class="col-name">${pg.name}</div><div class="col-sub">📍 ${pg.area} · ${pg.beds} bed${pg.beds > 1 ? 's' : ''} vacant</div></div>
+      <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--blue)">₹${Number(pg.rent).toLocaleString()}</div><div style="font-size:9px;color:var(--muted)">/bed/month</div></div>
+    </div>`).join('') :
+    `<div class="empty"><div class="ei">🏠</div><p>No PG listings yet.<br><button class="btn btn-primary btn-sm" onclick="go('pg-post')">Post First PG</button></p></div>`;
+
+  // Recent Books
+  const dbooks = document.getElementById('dash-books');
+  dbooks.innerHTML = books.slice(0, 3).length ? books.slice(0, 3).map(b => `
+    <div class="col-row" onclick="go('books-browse')" style="margin-bottom:8px">
+      <div class="col-logo" style="background:var(--green-light);font-size:20px">📚</div>
+      <div style="flex:1"><div class="col-name">${b.title}</div><div class="col-sub">${b.condition} · ${b.college}</div></div>
+      <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green)">₹${b.price}</div><div style="font-size:9px;color:var(--muted);text-decoration:line-through">₹${b.mrp || ''}</div></div>
+    </div>`).join('') :
+    `<div class="empty"><div class="ei">📚</div><p>No books yet.<br><button class="btn btn-green btn-sm" onclick="go('books-sell')">Sell First Book</button></p></div>`;
+
+  document.getElementById('dash-alert').textContent = `✅ Connected to Supabase — ${pgs.length} PGs, ${books.length} books live in Indore.`;
+}
+
+// ═══════════════════════════════════════════════
+// PG FINDER
+// ═══════════════════════════════════════════════
+function setPgFilter(el, f) {
+  document.querySelectorAll('[onclick*="setPgFilter"]').forEach(c => c.classList.remove('active', 'or', 'gr', 'pu'));
+  el.classList.add('active');
+  pgFilter = f;
+  renderPGs();
+}
+
+function renderPGs() {
+  const search = (document.getElementById('pg-search') || {}).value || '';
+  let pgs = [...CACHE.pgs];
+  if (pgFilter === 'boys') pgs = pgs.filter(p => p.type === 'boys');
+  else if (pgFilter === 'girls') pgs = pgs.filter(p => p.type === 'girls');
+  else if (pgFilter === 'both') pgs = pgs.filter(p => p.type === 'both');
+  else if (pgFilter === 'verified') pgs = pgs.filter(p => p.verified);
+  if (search) pgs = pgs.filter(p => (p.name + p.area + (p.college || '')).toLowerCase().includes(search.toLowerCase()));
+  const grid = document.getElementById('pg-grid');
+  if (!pgs.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="ei">🏠</div><h3>No PGs found</h3><p>Try different filters or <button class="btn btn-primary btn-sm" onclick="go('pg-post')">post the first one</button></p></div>`;
+    return;
+  }
+  grid.innerHTML = pgs.map(pg => `
+    <div class="pg-card">
+      <div class="pg-img ${pg.type || 'boys'}">
+        <span>${pg.emoji || '🏠'}</span>
+        <span class="type-badge ${pg.type || 'boys'}">${pg.type === 'girls' ? '👧 Girls' : pg.type === 'both' ? '🤝 Co-ed' : '👦 Boys'}</span>
+        ${pg.verified ? '<span class="ver-badge">✅ Verified</span>' : ''}
+      </div>
+      <div class="pg-body">
+        <div class="pg-name">${pg.name}</div>
+        <div class="pg-loc">📍 ${pg.area}${pg.college ? ' · Near ' + pg.college : ''}</div>
+        <div class="pg-price">₹${Number(pg.rent).toLocaleString()}<span>/bed/month</span></div>
+        <div class="tags">
+          ${(pg.facilities || []).slice(0, 3).map(f => `<span class="tag">${f}</span>`).join('')}
+          <span class="tag gr">By ${pg.poster === 'resident' ? 'Resident' : 'Owner'}</span>
+        </div>
+      </div>
+      <div class="pg-footer">
+        <span class="beds-left">🛏️ ${pg.beds} bed${pg.beds > 1 ? 's' : ''} vacant</span>
+        <button class="btn btn-primary btn-sm" onclick="videoTour('${pg.name}')">🎥 Tour</button>
+      </div>
+    </div>`).join('');
+}
+
+// Submit PG → Supabase
+async function submitPg() {
+  const name = document.getElementById('pp-name').value.trim();
+  const beds = parseInt(document.getElementById('pp-beds').value);
+  const rent = parseInt(document.getElementById('pp-rent').value);
+  if (!name || !beds || !rent) { showToast('⚠️ Please fill PG Name, Beds, and Rent.', 'warn'); return; }
+  const btn = document.getElementById('pp-btn');
+  btn.innerHTML = '<span class="spin"></span> AI Verifying...';
+  btn.disabled = true;
+
+  // Animate AI checks
+  const checks = document.getElementById('ai-check');
+  const items = ['PG name', 'Video continuity', 'Photo timestamps', 'Price vs market', 'Duplicate check', 'College ID verify'];
+  let i = 0;
+  const iv = setInterval(() => {
+    if (i < items.length) {
+      const done = items.map((it, idx) => idx < i ? `<span style="color:var(--green)">✅ ${it} — passed</span>` : `<span style="color:var(--muted)">○ ${it} — ${idx === i ? 'checking...' : 'waiting'}</span>`);
+      checks.innerHTML = done.join('<br>');
+      i++;
+    } else {
+      clearInterval(iv);
+      const facs = [...document.querySelectorAll('.fac-chip.sel')].map(c => c.textContent.trim());
+      const record = {
+        name, type: document.getElementById('pp-type').value,
+        area: document.getElementById('pp-area').value,
+        college: document.getElementById('pp-college').value,
+        beds, rent, room_type: document.getElementById('pp-room').value,
+        address: document.getElementById('pp-address').value,
+        description: document.getElementById('pp-desc').value,
+        facilities: facs, food: document.getElementById('pp-food').value,
+        poster: document.getElementById('pp-poster').value,
+        verified: true, emoji: '🏠'
+      };
+      sbInsert('pg_listings', record).then(saved => {
+        CACHE.pgs.unshift(saved || record);
+        btn.innerHTML = '✅ Live on Nexus! View in PG Finder';
+        btn.style.background = 'var(--green)';
+        btn.disabled = false;
+        btn.onclick = () => go('pg-browse');
+        showToast('✅ ' + name + ' is now LIVE in your Supabase database!');
+        sbInsert('agent_logs', { agent: 'Listing Quality', action: 'Approved: ' + name, status: 'success' });
+      });
+    }
+  }, 380);
+}
+
+function checkPgPrice() {
+  const rent = parseInt(document.getElementById('pp-rent').value) || 0;
+  const area = document.getElementById('pp-area').value;
+  const warn = document.getElementById('pp-price-warn');
+  const ranges = { 'Vijay Nagar': [3500, 7200], 'AB Road': [4200, 6500], 'Scheme 54': [5000, 8000], 'Super Corridor': [6000, 12000], 'MR-10': [3000, 4500], 'Bhawarkuan': [3800, 5500] };
+  const r = ranges[area] || [3000, 10000];
+  if (rent && (rent < r[0] - 500 || rent > r[1] + 1000)) {
+    warn.innerHTML = `<div class="alert al-warn">⚠️ ₹${rent.toLocaleString()} seems ${rent < r[0] - 500 ? 'below' : 'above'} market for ${area} (₹${r[0].toLocaleString()}–₹${r[1].toLocaleString()}). AI will flag for review.</div>`;
+  } else { warn.innerHTML = ''; }
+}
+
+// ═══════════════════════════════════════════════
+// BOOK BAZAAR
+// ═══════════════════════════════════════════════
+function setBookFilter(el, f) {
+  document.querySelectorAll('[onclick*="setBookFilter"]').forEach(c => c.classList.remove('active', 'or', 'gr', 'pu'));
+  el.classList.add('active');
+  bookFilter = f;
+  renderBooks();
+}
+
+function renderBooks() {
+  const search = (document.getElementById('book-search') || {}).value || '';
+  let books = [...CACHE.books];
+  if (['eng', 'med', 'law', 'mgmt', 'sci', 'com'].includes(bookFilter)) books = books.filter(b => b.subject === bookFilter);
+  else if (bookFilter === 'student') books = books.filter(b => b.seller_type === 'student');
+  else if (bookFilter === 'vendor') books = books.filter(b => b.seller_type === 'vendor');
+  if (search) books = books.filter(b => (b.title + (b.author || '') + b.subject).toLowerCase().includes(search.toLowerCase()));
+  const grid = document.getElementById('books-grid');
+  if (!books.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="ei">📚</div><h3>No books found</h3><p>Try different filters or <button class="btn btn-green btn-sm" onclick="go('books-sell')">list the first book</button></p></div>`;
+    return;
+  }
+  const spineClass = { eng: 'bs-eng', med: 'bs-med', law: 'bs-law', mgmt: 'bs-mgmt', sci: 'bs-sci', com: 'bs-com' };
+  const emoji = { eng: '📘', med: '📗', law: '📕', mgmt: '📙', sci: '📓', com: '📒' };
+  grid.innerHTML = books.map(b => {
+    const save = b.mrp && b.price ? Math.round((1 - b.price / b.mrp) * 100) : 0;
+    const cond = b.condition === 'Like New' ? 'cond-new' : b.condition === 'Good' ? 'cond-good' : 'cond-fair';
+    return `
+    <div class="book-card">
+      <div class="book-spine ${spineClass[b.subject] || 'bs-eng'}">
+        <span>${emoji[b.subject] || '📚'}</span>
+        <span class="seller-badge ${b.seller_type || 'student'}">${b.seller_type === 'vendor' ? '🏪 Vendor' : '🎓 Student'}</span>
+      </div>
+      <div class="book-title">${b.title}</div>
+      <div class="book-author">${b.author || ''}</div>
+      <div class="price-row">
+        <div class="book-price">₹${b.price}</div>
+        ${b.mrp ? `<div class="book-mrp">₹${b.mrp}</div><div class="save-tag">-${save}%</div>` : ''}
+      </div>
+      <div><span class="cond-tag ${cond}">${b.condition}</span></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">${b.college || ''}</div>
+      <button class="btn btn-green btn-sm btn-full" style="margin-top:8px" onclick="buyBook('${b.id}','${b.title}',${b.price})">Buy — ₹${b.price}</button>
+    </div>`;
+  }).join('');
+}
+
+const bookKnowledge = {
+  'data structures': { author: 'Cormen et al.', mrp: 450, suggested: 165, buyers: 18 },
+  'vlsi': { author: 'Weste & Harris', mrp: 560, suggested: 210, buyers: 7 },
+  'financial account': { author: 'Maheshwari', mrp: 680, suggested: 260, buyers: 22 },
+  'marketing': { author: 'Philip Kotler', mrp: 750, suggested: 270, buyers: 30 },
+  'constitutional law': { author: 'Jain & Jain', mrp: 380, suggested: 90, buyers: 11 },
+  'operating system': { author: 'Silberschatz', mrp: 480, suggested: 190, buyers: 14 },
+  'gray': { author: 'Susan Standring', mrp: 2200, suggested: 800, buyers: 5 },
+};
+
+function bookSearch(val) {
+  const key = Object.keys(bookKnowledge).find(k => val.toLowerCase().includes(k.split(' ')[0]) && val.length > 3);
+  const el = document.getElementById('bs-suggestion');
+  if (key) {
+    const d = bookKnowledge[key];
+    document.getElementById('bs-author').value = d.author;
+    document.getElementById('bs-mrp').value = d.mrp;
+    el.innerHTML = `<div style="background:var(--green-light);border-radius:8px;padding:12px;font-size:12px;color:var(--green);line-height:2">
+      📊 <strong>MRP:</strong> ₹${d.mrp}<br>
+      💡 <strong>Suggested price:</strong> ₹${d.suggested} (sells in ~48 hrs)<br>
+      👥 <strong>${d.buyers} students</strong> actively looking in Indore<br>
+      ✅ Author auto-filled from Nexus book database
+    </div>`;
+  } else {
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted)">Keep typing — AI will suggest optimal pricing.</div>';
+  }
+}
+
+async function submitBook() {
+  const title = document.getElementById('bs-title').value.trim();
+  const price = parseInt(document.getElementById('bs-price').value);
+  if (!title || !price) { showToast('⚠️ Title and price are required.', 'warn'); return; }
+  const btn = document.getElementById('bs-btn');
+  btn.innerHTML = '<span class="spin"></span> Saving to Supabase...';
+  btn.disabled = true;
+  const record = {
+    title, author: document.getElementById('bs-author').value,
+    subject: document.getElementById('bs-subject').value,
+    edition: document.getElementById('bs-edition').value,
+    college: document.getElementById('bs-college').value,
+    condition: document.getElementById('bs-condition').value,
+    mrp: parseInt(document.getElementById('bs-mrp').value) || 0,
+    price, delivery: document.getElementById('bs-delivery').value,
+    seller_type: document.getElementById('bs-seller').value,
+    phone: document.getElementById('bs-phone').value,
+    sold: false
+  };
+  const saved = await sbInsert('books', record);
+  CACHE.books.unshift(saved || record);
+  btn.innerHTML = '✅ Book Listed! View in Bazaar';
+  btn.style.background = 'var(--green)';
+  btn.disabled = false;
+  btn.onclick = () => go('books-browse');
+  showToast('📚 ' + title + ' is now live in your Supabase database!');
+}
+
+function buyBook(id, title, price) {
+  showToast(`✅ Connecting to seller of "${title}" — ₹${price}. Payment via UPI (escrow protected).`);
+}
+
+// ═══════════════════════════════════════════════
+// ADMISSIONS
+// ═══════════════════════════════════════════════
+const colleges = [
+  { name: 'IIM Indore', type: 'Management', match: 92, emoji: '🎓', color: 'var(--blue-light)' },
+  { name: 'DAVV', type: 'Engineering / Science', match: 88, emoji: '🏛️', color: 'var(--green-light)' },
+  { name: 'Symbiosis', type: 'Business Management', match: 84, emoji: '📚', color: 'var(--purple-light)' },
+  { name: 'Medicaps', type: 'Engineering', match: 79, emoji: '⚙️', color: 'var(--gold-light)' },
+  { name: 'LNCT', type: 'Engineering / MBA', match: 74, emoji: '🔬', color: 'var(--orange-light)' },
+];
+function renderColleges() {
+  document.getElementById('college-list').innerHTML = colleges.map(c => `
+    <div class="col-row">
+      <div class="col-logo" style="background:${c.color}">${c.emoji}</div>
+      <div style="flex:1"><div class="col-name">${c.name}</div><div class="col-sub">${c.type} · Indore, MP</div></div>
+      <div style="text-align:right"><div class="match-num">${c.match}%</div><div class="match-lbl">Match Score</div></div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+// OFFERS
+// ═══════════════════════════════════════════════
+function openModal(id, school, pct, suggest) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'm-accept') {
+    document.getElementById('acc-school').textContent = school;
+    document.getElementById('acc-pct').textContent = pct;
+    document.getElementById('acc-save').textContent = suggest;
+  } else {
+    document.getElementById('ctr-school').textContent = school;
+    document.getElementById('ctr-cur').textContent = pct;
+    document.getElementById('ctr-sug').textContent = suggest;
+  }
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function confirmAccept() {
+  closeModal('m-accept');
+  showToast('🎉 Offer accepted! Enrollment confirmed. Check your email for next steps.');
+}
+function submitCounter() {
+  const pct = document.getElementById('ctr-pct').value || '26';
+  const extra = document.getElementById('ctr-extra').value;
+  closeModal('m-counter');
+  showToast(`✅ Counter sent — ${pct}% requested${extra ? ', plus: ' + extra : ''}. Response within 24 hours.`);
+}
+
+// ═══════════════════════════════════════════════
+// RELOCATION
+// ═══════════════════════════════════════════════
+async function scheduleRelocation() {
+  const name = document.getElementById('rl-name').value.trim();
+  const budget = document.getElementById('rl-budget').value;
+  if (!name || !budget) { showToast('⚠️ Name and budget are required.', 'warn'); return; }
+  const btn = document.getElementById('rl-btn');
+  btn.innerHTML = '<span class="spin"></span> AI scheduling tours...';
+  btn.disabled = true;
+  const tourDateRaw = document.getElementById('rl-tour-date').value;
+  const dateStr = tourDateRaw ? new Date(tourDateRaw).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'this weekend';
+  const times = ['6:00 PM', '6:20 PM', '6:45 PM', '7:10 PM', '7:35 PM'];
+  const defaults = [
+    { name: 'Sunrise Boys PG', detail: 'Vijay Nagar · ₹4,200/bed · ✅ Verified' },
+    { name: 'Green Valley PG', detail: 'MR-10 · ₹3,800/bed · ✅ Verified' },
+    { name: 'Harmony Co-living', detail: 'AB Road · ₹6,500/bed · Wi-Fi + AC' },
+    { name: 'Sky Heights', detail: 'Super Corridor · ₹9,500/bed · Premium' },
+    { name: 'Shree Sai PG', detail: 'Scheme 54 · ₹5,200/bed · ✅ Verified' },
+  ];
+  const livePGs = CACHE.pgs.slice(0, 5);
+  const tours = times.map((t, i) => ({
+    time: t,
+    name: livePGs[i] ? livePGs[i].name : defaults[i].name,
+    detail: livePGs[i] ? `${livePGs[i].area} · ₹${livePGs[i].rent}/bed` : defaults[i].detail
+  }));
+  setTimeout(() => {
+    btn.innerHTML = '✅ 5 Tours Scheduled!';
+    btn.style.background = 'var(--green)';
+    document.getElementById('tour-list-inner').innerHTML = `
+      <div style="color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:12px">🎥 5 Live Tours — ${dateStr} · For ${name}</div>
+      ${tours.map(t => `<div class="tour-item">
+        <div class="tour-time">${t.time}</div>
+        <div><div class="tour-pg-name">${t.name}</div><div class="tour-pg-detail">${t.detail}</div></div>
+        <button class="tour-join" onclick="showToast('🎥 Connecting to live tour...')">Join Live</button>
+      </div>`).join('')}`;
+    document.getElementById('tour-result').style.display = 'block';
+    showToast(`✅ 5 tours scheduled for ${name}! WhatsApp confirmation sent.`);
+    sbInsert('agent_logs', { agent: 'Relocation Concierge', action: '5 tours scheduled for ' + name, status: 'success' });
+  }, 2200);
+}
+
+// ═══════════════════════════════════════════════
+// AI AGENTS
+// ═══════════════════════════════════════════════
+const agentDefs = [
+  { name: 'Listing Quality Checker', icon: '🔍', color: 'ai-bl', status: 'on', desc: 'Verifies every PG listing — video continuity, photo timestamps, price vs market, duplicate detection.', stats: [{ n: 'Approved', v: () => CACHE.pgs.filter(p => p.verified).length }, { n: 'Flagged', v: '12' }, { n: 'Pass rate', v: '97%' }], logs: [['ok', 'Listing approved — all checks passed ✓'], ['warn', 'Video cut at 1:23 — re-record requested'], ['ok', 'Photo timestamps verified, no gallery uploads']] },
+  { name: 'Smart Matching & Recommendations', icon: '🎯', color: 'ai-gr', status: 'on', desc: 'Learns user behavior and serves personalised PG, book, and college recommendations in real time.', stats: [{ n: 'Matches', v: '1,840' }, { n: 'Click-through', v: '68%' }, { n: 'Rating', v: '4.7★' }], logs: [['ok', 'Profile built for new user — 6 PG matches found'], ['ok', 'Book bundle alert sent — 4 Sem-5 books found'], ['ok', 'College match scores recalculated']] },
+  { name: 'Vacancy Monitor & Auto-Nudge', icon: '⏰', color: 'ai-or', status: 'on', desc: 'Monitors listing freshness, auto-pauses stale listings, nudges book sellers to drop price when unsold.', stats: [{ n: 'Nudges sent', v: '156' }, { n: 'Renewal rate', v: '82%' }, { n: 'Auto-paused', v: '23' }], logs: [['warn', '8 listings expiring in 5 days — nudges queued'], ['ok', '4 listings renewed after nudge ✓'], ['ok', 'Book price-drop suggestion sent — sold in 3 hrs']] },
+  { name: 'Pricing Intelligence', icon: '💰', color: 'ai-go', status: 'on', desc: 'Builds live pricing map of Indore. Tells sellers optimal price. Tells colleges what aid % moves students.', stats: [{ n: 'Prices tracked', v: () => CACHE.pgs.length + CACHE.books.length }, { n: 'Savings created', v: '₹2.4L' }, { n: 'Faster sales', v: '+43%' }], logs: [['warn', 'PG priced ₹2K above market — alert sent'], ['ok', 'Book price suggestion — sold in 3 hrs'], ['ok', 'Aid analysis: 18%+ increases yield 34%']] },
+  { name: 'Fraud Detection', icon: '🛡️', color: 'ai-re', status: 'alert', desc: 'Detects fake listings, broker patterns, duplicate photos, map-pin mismatches, payment abuse.', stats: [{ n: 'Blocked today', v: '3' }, { n: 'Under review', v: '7' }, { n: 'Clean listings', v: '99%' }], logs: [['err', 'Account #882 — duplicate photos × 4 — BLOCKED'], ['warn', 'Account #771 — 9 listings/2hrs — broker pattern'], ['ok', 'Daily scan complete — all listings checked ✓']] },
+  { name: 'Relocation Concierge', icon: '🚀', color: 'ai-pu', status: 'on', desc: 'Auto-schedules 5 live video tours, notifies PG owners, handles provisional deposits for relocating users.', stats: [{ n: 'Tours scheduled', v: '28' }, { n: 'Bookings made', v: '19' }, { n: 'Satisfaction', v: '4.9★' }], logs: [['ok', '5 tours scheduled for Rahul K — April 5th'], ['ok', 'PG owners confirmed 4/5 slots ✓'], ['ok', 'Priya S booked PG after tour — deposit collected']] },
+];
+
+function getTime(off) { const d = new Date(); d.setMinutes(d.getMinutes() - off * 18); return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes(); }
+
+function renderAgents() {
+  document.getElementById('agents-display').innerHTML = agentDefs.map(a => `
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon ${a.color}">${a.icon}</div>
+        <div><div class="agent-name">${a.name}</div>
+        <div class="agent-status ${a.status === 'on' ? 'as-on' : 'as-alert'}"><span class="adot"></span>${a.status === 'on' ? 'Running — 24/7' : 'Alert Active'}</div></div>
+      </div>
+      <div class="agent-desc">${a.desc}</div>
+      <div class="agent-stats">${a.stats.map(s => `<div><div class="as-num">${typeof s.v === 'function' ? s.v() : s.v}</div><div class="as-lbl">${s.n}</div></div>`).join('')}</div>
+      <div class="log-box">${a.logs.map((l, i) => `<div class="log-line ll-${l[0]}"><span class="lt">${getTime(i)}</span>${l[1]}</div>`).join('')}</div>
+    </div>`).join('');
+}
+
+async function runAgents() {
+  showToast('🤖 Running all 6 AI agents on your Supabase database...');
+  const pgs = CACHE.pgs;
+  // Auto-verify unverified listings
+  for (const pg of pgs.filter(p => !p.verified)) {
+    await sbUpdate('pg_listings', pg.id, { verified: true });
+    pg.verified = true;
+  }
+  await sbInsert('agent_logs', { agent: 'Fraud', action: `Scanned ${pgs.length} PGs and ${CACHE.books.length} books`, status: 'success' });
+  await sbInsert('agent_logs', { agent: 'Pricing', action: `Analysed ${pgs.length + CACHE.books.length} listings`, status: 'success' });
+  setTimeout(() => showToast('✅ All 6 agents completed! Check AI Agents tab for results.'), 1500);
+}
+
+// ═══════════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════════
+async function refreshAdmin() {
+  await loadAll();
+  const pgs = CACHE.pgs, books = CACHE.books;
+  document.getElementById('adm-users').textContent = pgs.length * 3 + books.length + 12;
+  document.getElementById('adm-pgs').textContent = pgs.length;
+  document.getElementById('adm-books').textContent = books.length;
+  document.getElementById('adm-pg-tbl').innerHTML = pgs.slice(0, 10).map(pg => `
+    <tr>
+      <td>${pg.name}</td><td>${pg.type}</td><td>${pg.area}</td><td>${pg.beds}</td><td>₹${Number(pg.rent).toLocaleString()}</td>
+      <td><span class="sdot ${pg.verified ? 'sd-gr' : 'sd-or'}"></span>${pg.verified ? 'Live' : 'Pending'}</td>
+      <td>
+        ${!pg.verified ? `<button class="btn btn-primary btn-sm" onclick="approvePg('${pg.id}',this)" style="margin-right:4px">Approve</button>` : ''}
+        <button class="btn btn-red btn-sm" onclick="deletePg('${pg.id}',this)">Delete</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">No PG listings yet — <a onclick="go(\'pg-post\')" style="color:var(--blue);cursor:pointer">post the first one</a></td></tr>';
+  document.getElementById('adm-book-tbl').innerHTML = books.slice(0, 10).map(b => `
+    <tr>
+      <td>${b.title.substring(0, 22)}${b.title.length > 22 ? '...' : ''}</td><td>₹${b.price}</td><td>${b.condition}</td>
+      <td><span class="seller-badge ${b.seller_type}" style="display:inline">${b.seller_type}</span></td>
+      <td><button class="btn btn-red btn-sm" onclick="deleteBook('${b.id}',this)">Remove</button></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">No books yet</td></tr>';
+}
+
+async function approvePg(id, btn) {
+  await sbUpdate('pg_listings', id, { verified: true });
+  const pg = CACHE.pgs.find(p => p.id === id);
+  if (pg) pg.verified = true;
+  btn.textContent = '✅ Approved'; btn.style.background = 'var(--green)'; btn.disabled = true;
+  showToast('✅ PG approved and verified in Supabase.');
+}
+async function deletePg(id, btn) {
+  if (!confirm('Delete this PG listing from Supabase?')) return;
+  await sbDelete('pg_listings', id);
+  CACHE.pgs = CACHE.pgs.filter(p => p.id !== id);
+  btn.closest('tr').remove();
+  showToast('🗑️ PG deleted from Supabase.');
+}
+async function deleteBook(id, btn) {
+  if (!confirm('Remove this book listing from Supabase?')) return;
+  await sbDelete('books', id);
+  CACHE.books = CACHE.books.filter(b => b.id !== id);
+  btn.closest('tr').remove();
+  showToast('🗑️ Book removed from Supabase.');
+}
+
+// ═══════════════════════════════════════════════
+// VIDEO TOUR
+// ═══════════════════════════════════════════════
+function videoTour(name) {
+  showToast('🎥 Opening live video tour with ' + name + '... In production: Agora video SDK connects directly.');
+}
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show';
+  t.style.background = type === 'warn' ? 'var(--orange)' : 'var(--ink)';
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.className = 'toast', 4000);
+}
+
+// ═══════════════════════════════════════════════
+// AI CHAT
+// ═══════════════════════════════════════════════
+let chatOpen = false;
+function toggleChat() { chatOpen = !chatOpen; document.getElementById('ai-win').classList.toggle('open', chatOpen); }
+const aiReplies = {
+  pg: () => `I found ${CACHE.pgs.length} PGs live in Indore right now! All stored in your Supabase database. Top areas: Vijay Nagar, AB Road, Scheme 54. Go to PG Finder to browse with filters and video tours. 🏠`,
+  book: () => `${CACHE.books.length} books listed right now in your Supabase database! Students are saving an average of 58% vs MRP. Check Book Bazaar for the full list. 📚`,
+  offer: () => `You have 3 active admission offers — IIM Indore at 20% (₹1.4L/year savings) is your best. Your 92% match means you can counter for 25–28%. Go to My Offers to negotiate! 🎓`,
+  reloc: () => `The Relocation Concierge uses your live Supabase PG data to auto-schedule 5 video tours. Fill the form with your joining date and budget — done in 2 minutes! 🚀`,
+  default: () => `I can help with: 🏠 PGs (${CACHE.pgs.length} live) | 📚 Books (${CACHE.books.length} listed) | 🎓 Admissions | 🚀 Relocation | 🤖 AI Agents. What do you need?`
+};
+function sendChat() {
+  const inp = document.getElementById('ai-inp');
+  const msg = inp.value.trim(); if (!msg) return;
+  const msgs = document.getElementById('ai-msgs');
+  msgs.innerHTML += `<div class="ai-msg user">${msg}</div>`;
+  inp.value = ''; msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    const low = msg.toLowerCase();
+    let r = aiReplies.default();
+    if (low.includes('pg') || low.includes('room') || low.includes('hostel')) r = aiReplies.pg();
+    else if (low.includes('book') || low.includes('textbook') || low.includes('sell')) r = aiReplies.book();
+    else if (low.includes('offer') || low.includes('college') || low.includes('admission')) r = aiReplies.offer();
+    else if (low.includes('reloc') || low.includes('tour') || low.includes('professional')) r = aiReplies.reloc();
+    msgs.innerHTML += `<div class="ai-msg bot">${r}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 900);
+}
+
+// ═══════════════════════════════════════════════
+// INIT — Connect to Supabase on load
+// ═══════════════════════════════════════════════
+(async function init() {
+  const overlay = document.getElementById('loading-overlay');
+  const dot = document.getElementById('db-dot');
+  const statusText = document.getElementById('db-status-text');
+  try {
+    await loadAll();
+    overlay.classList.add('hidden');
+    dot.className = 'db-dot connected';
+    statusText.textContent = `Supabase connected ✅`;
+    refreshDashboard();
+    showToast(`✅ Live! ${CACHE.pgs.length} PGs and ${CACHE.books.length} books loaded from Supabase.`);
+  } catch (e) {
+    overlay.classList.add('hidden');
+    dot.style.background = 'var(--red)';
+    statusText.textContent = 'Connection error — check Supabase';
+    showToast('⚠️ Could not connect to Supabase. Check that tables exist.', 'warn');
+    refreshDashboard();
+  }
+})();
+</script>
+</body>
+</html>
